@@ -33,6 +33,8 @@ public class Main {
     private static String new_addition;
     private static boolean addition_decided;
 
+    private static int take_out;
+
     public static void main(String[] args) {
 
         name_to_list_link.put("item", items);
@@ -41,7 +43,7 @@ public class Main {
 
         while ((!got_valid_input) || (!want_to_quit)) {
             System.out.println(
-                "   Press 1 for a random suggestion\n   Press 2 to add to a category\n   Press 101 to quit"
+                "   Press 1 for a random suggestion\n   Press 2 to add to a category\n   Press 3 to remove from a category\n   Press 101 to quit"
             );
 
             try {
@@ -55,7 +57,9 @@ public class Main {
             if (order_num == 1) {
                 get_random_inspiration();
             } else if (order_num == 2) {
-                select_category();
+                select_category_add();
+            } else if (order_num == 3) {
+                select_category_remove();
             } else if (order_num == 101) {
                 want_to_quit = true;
             }
@@ -92,7 +96,7 @@ public class Main {
         System.out.println(output_str);
     }
 
-    private static void select_category() {
+    private static void select_category_add() {
         found_list_to_edit = false;
         addition_decided = false;
 
@@ -147,5 +151,84 @@ public class Main {
                 continue;
             }
         }
+    }
+
+    private static void select_category_remove() {
+        got_valid_input = false;
+        // display what we already have in the lists
+        System.out.println("Here are the items: ");
+        for (int i = 0; i < items.size(); i++) {
+            System.out.println("    " + (i + 1) + " " + items.get(i));
+        }
+
+        System.out.println("Here are the languages: ");
+        for (int i = 0; i < languages.size(); i++) {
+            System.out.println("    " + (i + 1) + " " + languages.get(i));
+        }
+
+        // ask user what list they want to edit
+        while (!got_valid_input) {
+            System.out.println("Type the desired category you want to edit ('languages' or 'items', or 'quit' to exit process)");
+            desired_list_to_edit = sc.nextLine();
+
+            // if they want to quit, quit
+            if (desired_list_to_edit.equals("quit")) {
+                break;
+            }
+
+            if ((!desired_list_to_edit.equals("languages")) && (!desired_list_to_edit.equals("items"))) {
+                // if the input is neither 'languages' or 'items', then ask again
+                continue;
+            } else {
+                // ask the user what they want to take out
+                removal(desired_list_to_edit);
+                got_valid_input = true;
+            }
+        }
+
+        System.out.println("here we are");
+
+    }
+
+    private static void removal(String list_to_change) {
+        got_valid_input = false;
+        while (!got_valid_input) {
+            System.out.println("Type in the number you want to remove: ");
+            try {
+                take_out = Integer.parseInt(sc.nextLine()) - 1;
+                // subtract one to adapt to arraylists starting at 0
+            } catch (Exception e) {
+                continue;
+            }
+
+            if (desired_list_to_edit.equals("languages")) {
+                
+                // check if the number is valid for the desired list (not negative and an actual index of the desired list)
+                if ((take_out >= 0) && (take_out <= languages.size() - 1)) {
+                    languages.remove(take_out);
+                    got_valid_input = true;
+
+                } else {
+                    // if the input is not valid...
+
+                    System.out.println("Sorry, it looks like your choice is not one of the choices");
+                    continue;
+                }
+
+            } else {
+                
+                // check if the number is valid for the desired list (not negative and an actual index of the desired list)
+                if ((take_out >= 0) && (take_out <= items.size() - 1)) {
+                    items.remove(take_out);
+                    got_valid_input = true;
+                } else {
+                    System.out.println("Sorry, it looks like your choice is not one of the choices");
+                    continue;
+                }
+
+            }
+
+        }
+        
     }
 }
