@@ -15,9 +15,6 @@ public class Main {
     private static BufferedWriter wr_items;
     private static BufferedWriter wr_languages;
 
-    private static String write_to_items = "";
-    private static String write_to_languages = ""; 
-
     private static ArrayList<String> languages = new ArrayList<>(Arrays.asList(
         "Python", "Java", "Rust", "C", "C++", "C#", "JavaScript",
                         "Go", "Swift", "TypeScript", "Kotlin", "Ruby"
@@ -244,15 +241,6 @@ public class Main {
     }
 
     private static void save_changes() {
-        // compile the items into one string to write all at one
-        for (int i = 0; i < items.size(); i++) {
-            write_to_items = write_to_items + items.get(i) + "\n";
-        }
-        
-        // same thing for languages
-        for (int i = 0; i < languages.size(); i++) {
-            write_to_languages = write_to_languages + languages.get(i) + "\n";
-        }
 
         try {
             // make the writers
@@ -260,9 +248,14 @@ public class Main {
             wr_languages = new BufferedWriter(new FileWriter("saved_options/saved_languages.txt"));
             
             // write the contents
-            wr_items.write(write_to_items);
-            wr_languages.write(write_to_languages);
+            for (String string : items) {
+                wr_items.write(string + "\n");
+            }
             
+            for (String string: languages) {
+                wr_languages.write(string + "\n");;
+            }
+
             // close the writers
             wr_items.close();
             wr_languages.close();
